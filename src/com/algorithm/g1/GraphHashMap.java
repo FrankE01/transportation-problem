@@ -15,7 +15,7 @@ public class GraphHashMap {
 	int index = -1;
 	int listSize = 0;
 	List<String[]> allPaths = new ArrayList<>();
-	int[][] matrix = new int[7][7];
+	int[][] matrix = new int[21][21];
 
 	
 	
@@ -37,12 +37,15 @@ public class GraphHashMap {
 		list = adjacencyList.get(source);
 		list.addFirst(edge);
 		adjacencyList.put(source, list);
+		System.out.println(edge);
 		
 		//add back edge
 		edge = new Edge(destination, source, weight);
 		list = adjacencyList.get(destination);
 		list.addFirst(edge);
 		adjacencyList.put(destination, list);
+		System.out.println(edge);
+
 	}
 	
 	
@@ -85,7 +88,7 @@ public class GraphHashMap {
 		LinkedList<Edge> list = adjacencyList.get(source);
 		for(int i = 0; i < list.size(); i++) {
 			Edge edge = list.get(i);
-			if(edge.destination != destination && visited[indexes.get(edge.destination)] == false) {
+			if(indexes.get(edge.destination)< adjacencyList.size() && edge.destination != destination && visited[indexes.get(edge.destination)] == false) {
 				print(edge.destination, destination, newPath, visited);
 			}else if(edge.destination == destination) {
 				System.out.println(newPath+"->"+edge.destination);
@@ -106,7 +109,7 @@ public class GraphHashMap {
 						next = e;
 					}
 				}
-//				
+				
 				int row = indexes.get(allPaths.get(i)[j]);
 				
 				int column = indexes.get(allPaths.get(i)[j+1]);
@@ -144,7 +147,7 @@ public class GraphHashMap {
 		}
 		System.out.println();
 		for (int i = 0; i < adjacencyList.size(); i++) {
-			System.out.println("Vertex " + i + " is connected to: ");
+			System.out.println(i + " is connected to: ");
 			for(int j = 0; j < adjacencyList.size(); j++) {
 				if(matrix[i][j]>0) {
 					System.out.print(j + " ");
