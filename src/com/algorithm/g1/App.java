@@ -30,7 +30,7 @@ public class App {
 		graphHM.printGraph();
 		System.out.println("--------------------------------Depth First Traversal--------------------------------");
 		System.out.println();
-		graphHM.printAllPaths("D", "A");
+		graphHM.printAllPaths("A", "C");
 		System.out.println();
 
 		
@@ -39,32 +39,19 @@ public class App {
 		}
 		System.out.println();
 		
+		graphHM.listToMatrix();
+		
+		GraphAdjacencyMatrix graphAM = new GraphAdjacencyMatrix(7);
+		graphAM.matrix = graphHM.matrix;
+		graphAM.printGraph();
 
-		//--------------------------------------------------Adjacency Matrix-------------------------------------
-//		GraphAdjacencyMatrix graphAM = new GraphAdjacencyMatrix(7);
-//		
-//		graphAM.addEdge(0, 1, 5);
-//		graphAM.addEdge(0, 2, 6);
-//		graphAM.addEdge(0, 6, 3);
-//		graphAM.addEdge(1, 3, 2);
-//		graphAM.addEdge(1, 4, 7);
-//		graphAM.addEdge(2, 3, 10);
-//		graphAM.addEdge(3, 4, 1);
-//		graphAM.addEdge(4, 6, 1);		
-//		
-//		graphAM.printGraph();
-//		
-//		VogelApproximationMethod VAM = new VogelApproximationMethod(7, graphAM.matrix);
-//		
-//		for(int i = 0; i < 6; i++) {			
-//			VAM.calculatePenalties();
-//			System.out.println("Row Penalties: "+Arrays.toString(VAM.rowPenalties));
-//			System.out.println("Column Penalties: "+Arrays.toString(VAM.columnPenalties));
-//			VAM.getProvisionalRoute();
-//			graphAM.printGraph();
-//			System.out.println("\n\n");
-//		}
-//		VAM.getSolutionCost();;
+		VogelApproximationMethod VAM = new VogelApproximationMethod(7, graphAM.matrix);
+		for(int i = 0; i < 6; i++) {			
+			VAM.calculatePenalties();
+			VAM.getProvisionalRoute();
+		}
+		System.out.println("List of provisional routes: "+ VAM.provisionalRoute);
+		VAM.getSolutionCost();;
 		
 	}
 

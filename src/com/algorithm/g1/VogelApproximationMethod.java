@@ -1,7 +1,6 @@
 package com.algorithm.g1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +40,6 @@ public class VogelApproximationMethod {
 					}
 				}
 			}
-			System.out.println(a);
 			
 			rowSmallest = a.get(0);
 			if(a.size()<2) {
@@ -71,7 +69,6 @@ public class VogelApproximationMethod {
 					}
 				}
 			}
-			System.out.println(b);
 			
 			columnSmallest = b.get(0);
 			if(b.size()<2) {
@@ -87,7 +84,6 @@ public class VogelApproximationMethod {
 	}
 	
 	public void getProvisionalRoute() {
-		int largestPenalty = 0;
 		int largestRowPenalty = 0;
 		int largestColumnPenalty = 0;
 		int largestRowPenaltyIndex = 0;
@@ -111,20 +107,15 @@ public class VogelApproximationMethod {
 				largestColumnPenaltyIndex = i;
 			}
 		}
-		System.out.println("lrp:" + largestRowPenalty);
 		
 		//selecting larger penalty between rows and columns
 		if(largestRowPenalty >= largestColumnPenalty) {
-			largestPenalty = largestRowPenalty;
 			largestPenaltySource = "Row";
 			largestPenaltyIndex = largestRowPenaltyIndex;
 		} else if(largestColumnPenalty > largestRowPenalty) {
-			largestPenalty = largestColumnPenalty;
 			largestPenaltySource = "Column";
 			largestPenaltyIndex = largestColumnPenaltyIndex;
 		}
-		System.out.println("Largest Penalty: " + largestPenalty);
-		System.out.println("Largest Penalty Source: " + largestPenaltySource +" "+ largestPenaltyIndex);
 		
 		
 		//finding smallest cost from the row or column with
@@ -145,8 +136,6 @@ public class VogelApproximationMethod {
 				}
 			}
 		}
-		int[] cell = {cellRow, cellColumn};
-		System.out.println("Smallest Penalty Cost Location: Matrix"+ Arrays.toString(cell));
 		
 		Edge edge = new Edge(cellRow, cellColumn, matrix[cellRow][cellColumn]);
 		provisionalRoute.add(edge);
@@ -166,7 +155,6 @@ public class VogelApproximationMethod {
 				}
 			}
 		}
-		System.out.println("List of provisional routes: "+ provisionalRoute);
 	}
 	
 	public void getSolutionCost() {

@@ -11,6 +11,7 @@ public class GraphAdjacencyMatrix {
 		matrix = new int[vertices][vertices];
 	}
 	
+	
 	public void addEdge(int source, int destination, int weight) {
 		//add forward edge
 		matrix[source][destination]= weight;

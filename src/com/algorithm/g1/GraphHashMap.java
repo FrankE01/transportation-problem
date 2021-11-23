@@ -1,6 +1,7 @@
 package com.algorithm.g1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,7 +15,7 @@ public class GraphHashMap {
 	int index = -1;
 	int listSize = 0;
 	List<String[]> allPaths = new ArrayList<>();
-	int[][] matrix = new int[adjacencyList.size()][adjacencyList.size()];
+	int[][] matrix = new int[7][7];
 
 	
 	
@@ -44,47 +45,6 @@ public class GraphHashMap {
 		adjacencyList.put(destination, list);
 	}
 	
-	public void DFS(Object source) {
-		boolean[] visited = new boolean[adjacencyList.size()];
-		
-		if(!visited[indexes.get(source)]) {
-			DSFUtil(source, visited);
-		}
-	}
-	
-	public void DSFUtil(Object source, boolean[] visited) {
-		//mark this as visited
-		visited[indexes.get(source)] = true;
-		
-		System.out.print(source + "=> ");
-		LinkedList<Edge> list = adjacencyList.get(source);
-		System.out.println("\n"+list);
-		for(int i = 0; i < list.size(); i++) {
-			Object destination = list.get(i).getDestination();
-			if(!visited[indexes.get(destination)]) {
-				DSFUtil(destination, visited);
-			}
-			System.out.println();
-		}
-	}
-	
-	public void DFSUtil2(Object source, boolean[] visited) {
-		visited[indexes.get(source)] = true;
-		System.out.print(source + " ");
-		
-		Iterator<Edge> i = adjacencyList.get(source).listIterator();
-		while (i.hasNext()) {
-			Edge n = i.next();
-			if(!visited[indexes.get(n.getDestination())]) {
-				DFSUtil2(n.getDestination(), visited);
-			}
-		}
-	}
-	
-	public void DFS2(Object source) {
-		boolean[] visited = new boolean[adjacencyList.size()];
-		DFSUtil2(source, visited);
-	}
 	
 	public void DFS3(Object source) {
 		boolean[] visited = new boolean[adjacencyList.size()];
@@ -133,10 +93,33 @@ public class GraphHashMap {
 				allPaths.add(s.split("->"));
 			}
 		}
-//		System.out.println(allPaths);
 		visited[indexes.get(source)] = false;
 	}
-		
+	
+	public void listToMatrix() {
+		for(int i = 0; i < allPaths.size()-1; i++) {
+			for(int j = 1; j < allPaths.get(i).length - 1; j++) {
+				LinkedList<Edge> LL = adjacencyList.get(allPaths.get(i)[1]);
+				Edge next = null;
+				for(Edge e : LL) {
+					if(e.destination.equals(allPaths.get(i)[j+1])) {
+						next = e;
+					}
+				}
+//				
+				int row = indexes.get(allPaths.get(i)[j]);
+				
+				int column = indexes.get(allPaths.get(i)[j+1]);
+				
+				if(next != null) {
+					matrix[row][column] = next.weight;
+				}
+				
+				
+				
+			}
+		}
+	}
 
 	public void printGraph() {
 		Set<Object> set = adjacencyList.keySet();
@@ -149,6 +132,23 @@ public class GraphHashMap {
 			LinkedList<Edge> list = adjacencyList.get(vertex);
 			for(int i = 0; i < list.size(); i++) {
 				System.out.print("("+list.get(i).getWeight()+")"+list.get(i).getDestination()+ " ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public void printGraph2() {
+		System.out.println("Graph: (Adjacency Matrix)");
+		for(int i = 0; i < adjacencyList.size(); i++) {
+			System.out.println(Arrays.toString(matrix[i]));
+		}
+		System.out.println();
+		for (int i = 0; i < adjacencyList.size(); i++) {
+			System.out.println("Vertex " + i + " is connected to: ");
+			for(int j = 0; j < adjacencyList.size(); j++) {
+				if(matrix[i][j]>0) {
+					System.out.print(j + " ");
+				}
 			}
 			System.out.println();
 		}
