@@ -9,19 +9,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+
 public class GraphHashMap {
 	HashMap<Object, LinkedList<Edge>> adjacencyList = new HashMap<>();
 	HashMap<Object, Integer> indexes = new HashMap<>();
 	int index = -1;
 	int listSize = 0;
-	List<String[]> allPaths = new ArrayList<>();
-	int[][] matrix = new int[21][21];
+	List<List<String>> allPaths = new ArrayList<>();
+	int[][] matrix;
 
 	
 	
 	
 	public GraphHashMap(ArrayList<Object> vertices) {
 		this.listSize = vertices.size();
+		this.matrix = new int[vertices.size()][vertices.size()];
 		for (int i = 0; i < vertices.size(); i++) {
 			Object vertex = vertices.get(i);
 			LinkedList<Edge> list = new LinkedList<>();
@@ -37,19 +39,17 @@ public class GraphHashMap {
 		list = adjacencyList.get(source);
 		list.addFirst(edge);
 		adjacencyList.put(source, list);
-		System.out.println(edge);
 		
 		//add back edge
 		edge = new Edge(destination, source, weight);
 		list = adjacencyList.get(destination);
 		list.addFirst(edge);
 		adjacencyList.put(destination, list);
-		System.out.println(edge);
 
 	}
 	
 	
-	public void DFS3(Object source) {
+	public void DFS(Object source) {
 		boolean[] visited = new boolean[adjacencyList.size()];
 		
 		Stack<Object> stack = new Stack<>();
@@ -91,38 +91,32 @@ public class GraphHashMap {
 			if(indexes.get(edge.destination)< adjacencyList.size() && edge.destination != destination && visited[indexes.get(edge.destination)] == false) {
 				print(edge.destination, destination, newPath, visited);
 			}else if(edge.destination == destination) {
-				System.out.println(newPath+"->"+edge.destination);
+//				System.out.println(newPath+"->"+edge.destination);
 				String s = newPath+"->"+edge.destination;
-				allPaths.add(s.split("->"));
+				List<String> temp = Arrays.asList(s.split("->"));
+				allPaths.add(temp);
 			}
 		}
 		visited[indexes.get(source)] = false;
 	}
 	
 	public void listToMatrix() {
-		for(int i = 0; i < allPaths.size()-1; i++) {
-			for(int j = 1; j < allPaths.get(i).length - 1; j++) {
-				LinkedList<Edge> LL = adjacencyList.get(allPaths.get(i)[1]);
-				Edge next = null;
-				for(Edge e : LL) {
-					if(e.destination.equals(allPaths.get(i)[j+1])) {
-						next = e;
+		for(List<String> o : allPaths) {
+			for(String p : o) {
+				if(p != "" && o.indexOf(p)+1 < o.size()) {
+					LinkedList<Edge> LL = adjacencyList.get(p);
+					Edge next = null;
+					for(Edge e : LL) {
+						if(e.destination.equals((o.get(o.indexOf(p)+1)))){
+							next = e;
+						}
 					}
-				}
-				
-				int row = indexes.get(allPaths.get(i)[j]);
-				
-				int column = indexes.get(allPaths.get(i)[j+1]);
-				
-				if(next != null) {
-					matrix[row][column] = next.weight;
-				}
-				
-				
-				
+					matrix[indexes.get(p)][indexes.get(o.get(o.indexOf(p)+1))] = next.weight;
+				} 
 			}
 		}
 	}
+	
 
 	public void printGraph() {
 		Set<Object> set = adjacencyList.keySet();
@@ -131,13 +125,36 @@ public class GraphHashMap {
 		System.out.println("Graph: (Adjacency List using Hash Maps)");
 		while(iterator.hasNext()) {
 			Object vertex = iterator.next();
-			System.out.print("Vertex " + vertex + " is connected to: ");
+			System.out.print(vertex + " is connected to: ");
 			LinkedList<Edge> list = adjacencyList.get(vertex);
 			for(int i = 0; i < list.size(); i++) {
 				System.out.print("("+list.get(i).getWeight()+")"+list.get(i).getDestination()+ " ");
 			}
 			System.out.println();
 		}
+	}
+	
+	public void getShortestPath() {
+		int smallest = Integer.MAX_VALUE;
+		int index = Integer.MAX_VALUE;
+		for(List<String> LL : allPaths) {
+			int cost = 0;
+			for(int i = 1; i < LL.size(); i++) {
+				List<Edge> LL2 = adjacencyList.get(LL.get(i));
+				for(Edge e : LL2) {
+					if(i< LL.size()-1) {
+						if((LL.get(i+1).toString().equalsIgnoreCase(e.destination.toString()))) {
+							cost += e.weight;
+						}
+					}
+				}
+			}
+			if(cost< smallest) {
+				smallest = cost;
+				index = allPaths.indexOf(LL);
+			}
+		}
+		System.out.println("Actual Shortest Path with a distance of "+smallest+" meters : "+String.join(" -> ", allPaths.get(index)));
 	}
 	
 	public void printGraph2() {

@@ -1,7 +1,8 @@
 package com.algorithm.g1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+
 
 public class App {
 
@@ -17,7 +18,6 @@ public class App {
 		vertices.add("Department of Political Science");
 		vertices.add("School of Engineering");
 		vertices.add("Department of Mathematics");
-		vertices.add("School of Graduate Studies");
 		vertices.add("UGBS");
 		vertices.add("UGCS");
 		vertices.add("Chemistry Department");
@@ -63,31 +63,38 @@ public class App {
 		graphHM.addEdge("International Programs Office", "Chemistry Department", 400);
 		graphHM.addEdge("Chemistry Department", "Akuafo Hall", 450);
 
-		graphHM.printGraph();
+		Gui UI = new Gui(vertices);
+		
+//		graphHM.printGraph();
 		System.out.println("--------------------------------Depth First Traversal--------------------------------");
 		System.out.println();
-		graphHM.printAllPaths("Great Hall", "Volta Hall");
-		System.out.println();
-
+		graphHM.printAllPaths("Department of Mathematics", "Balme Library");
 		
-		for(String[] s : graphHM.allPaths) {
-			System.out.print(Arrays.toString(s));
+		System.out.println("5 possible routes from "+"Source"+ " to "+ "Destination");
+		for(int i = 0; i < 5; i++) {
+			List<String> s = graphHM.allPaths.get(i);
+			System.out.println(String.join(" -> ", s));
 		}
 		System.out.println();
+		
 		
 		graphHM.listToMatrix();
 		
-		GraphAdjacencyMatrix graphAM = new GraphAdjacencyMatrix(21);
+		GraphAdjacencyMatrix graphAM = new GraphAdjacencyMatrix(vertices.size());
 		graphAM.matrix = graphHM.matrix;
-		graphAM.printGraph();
+		
+//		graphAM.printGraph();
 
-		VogelApproximationMethod VAM = new VogelApproximationMethod(21, graphAM.matrix);
-		for(int i = 0; i < 20; i++) {			
+		VogelApproximationMethod VAM = new VogelApproximationMethod(vertices.size(), graphAM.matrix);
+		for(int i = 0; i < vertices.size(); i++) {			
 			VAM.calculatePenalties();
 			VAM.getProvisionalRoute();
 		}
-		System.out.println("List of provisional routes: "+ VAM.provisionalRoute);
+		
+//		System.out.println("List of provisional routes: "+ VAM.provisionalRoute);
 		VAM.getSolutionCost();
+		graphHM.getShortestPath();
+
 		
 	}
 

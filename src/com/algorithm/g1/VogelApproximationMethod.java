@@ -1,6 +1,7 @@
 package com.algorithm.g1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,7 @@ public class VogelApproximationMethod {
 	int[] columnPenalties;
 	int solutionCost = 0; 
 	LinkedList<Edge> provisionalRoute = new LinkedList<>();
+	LinkedList<Edge> ordered = new LinkedList<Edge>();
 	
 	public VogelApproximationMethod(int vertices, int[][] matrix) {
 		this.vertices = vertices;
@@ -80,7 +82,9 @@ public class VogelApproximationMethod {
 			
 			//adding column difference to penalties array
 			columnPenalties[i] = columnSecondSmallest - columnSmallest;
+			
 		}
+
 	}
 	
 	public void getProvisionalRoute() {
@@ -138,15 +142,24 @@ public class VogelApproximationMethod {
 		}
 		
 		Edge edge = new Edge(cellRow, cellColumn, matrix[cellRow][cellColumn]);
+		
 		provisionalRoute.add(edge);
+		LinkedList<Edge> ordered = new LinkedList<>();
+		
+		this.sortRoute();
+		this.ordered = ordered;
 		
 		//crossing out potential multi-ring problem cells
 		for(int i = 0; i < vertices; i++) {
 			matrix[cellRow][i] = 0;
 			matrix[i][cellColumn] = 0;
 		}
+		matrix[cellColumn][cellRow]=0;
 		
-		
+		for(int i = 0; i < this.ordered.size(); i++) {
+			matrix[(Integer)this.ordered.get(0).source][(Integer)this.ordered.get(i).destination] = 0;
+			matrix[(Integer)this.ordered.get(i).destination][(Integer)this.ordered.get(0).source] = 0;
+		}
 		
 		for(int i = 0; i < provisionalRoute.size(); i++) {
 			for(int j = 0; j < provisionalRoute.size(); j++) {
@@ -157,10 +170,48 @@ public class VogelApproximationMethod {
 		}
 	}
 	
+	public void sortRoute() {
+		
+		for(int i = 0; i < this.provisionalRoute.size(); i++) {
+			Edge current = this.provisionalRoute.get(i);
+			
+			for(int j = 0; j < this.provisionalRoute.size(); j++) {
+				if(current.source == this.provisionalRoute.get(j).destination) {
+					this.provisionalRoute.add(i, this.provisionalRoute.remove(j));
+				}
+				else if(current.destination == this.provisionalRoute.get(j).source) {
+					if(j == this.provisionalRoute.size()-1) {
+						this.provisionalRoute.addLast(this.provisionalRoute.remove(j));
+					}else {
+						this.provisionalRoute.add(i+1, this.provisionalRoute.remove(j));
+					}
+				}
+			}
+			break;
+		}
+	}
+	
 	public void getSolutionCost() {
 		for(Edge e : provisionalRoute) {
 			solutionCost+= e.weight;
 		}
-		System.out.println("Solution Cost: "+solutionCost);
+		System.out.println("Approximate Solution Cost from Vogel Approximation: "+solutionCost +" meters");
+	}
+	
+	public void printGraph() {
+		System.out.println("Graph: (Adjacency Matrix)");
+		for(int i = 0; i < vertices; i++) {
+			System.out.println(Arrays.toString(matrix[i]));
+		}
+		System.out.println();
+//		for (int i = 0; i < vertices; i++) {
+//			System.out.println("Vertex " + i + " is connected to: ");
+//			for(int j = 0; j < vertices; j++) {
+//				if(matrix[i][j]>0) {
+//					System.out.print(j + " ");
+//				}
+//			}
+//			System.out.println();
+//		}
 	}
 }

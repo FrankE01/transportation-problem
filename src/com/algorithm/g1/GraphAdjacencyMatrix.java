@@ -26,15 +26,15 @@ public class GraphAdjacencyMatrix {
 			System.out.println(Arrays.toString(matrix[i]));
 		}
 		System.out.println();
-		for (int i = 0; i < vertices; i++) {
-			System.out.println("Vertex " + i + " is connected to: ");
-			for(int j = 0; j < vertices; j++) {
-				if(matrix[i][j]>0) {
-					System.out.print(j + " ");
-				}
-			}
-			System.out.println();
-		}
+//		for (int i = 0; i < vertices; i++) {
+//			System.out.println("Vertex " + i + " is connected to: ");
+//			for(int j = 0; j < vertices; j++) {
+//				if(matrix[i][j]>0) {
+//					System.out.print(j + " ");
+//				}
+//			}
+//			System.out.println();
+//		}
 	}
 	
 }
